@@ -66,7 +66,7 @@ export default function Driver() {
         if(route.Stop2 &&  !route.Stop2.ActualTime){
           setActiveStep(1)
         }
-        else if(route.Stop3 && !route.Stop2.ActualTime ){
+        else if(route.Stop3 && !route.Stop3.ActualTime ){
           setActiveStep(2)
         }else {
           setActiveStep(3)
@@ -110,9 +110,9 @@ export default function Driver() {
     }
     axios.put(`/api/updateUserRoute/${userRoute._id}`, sendData)
       .then(res => {
-          userRoute[stops[activeStep]].ActualTime = value;
-          const route = res.data.data
-          setUserRoute(userRoute);
+          const route = {...userRoute}
+          route[stops[activeStep]].ActualTime = value;
+          setUserRoute(route);
           if(route.Stop1 &&  !route.Stop1.ActualTime){
             setActiveStep(0)
           }
@@ -120,10 +120,10 @@ export default function Driver() {
           if(route.Stop2 &&  !route.Stop2.ActualTime){
             setActiveStep(1)
           }
-          else if(route.Stop3 && !route.Stop2.ActualTime ){
+          else if(route.Stop3 && !route.Stop3.ActualTime ){
             setActiveStep(2)
-          }else {
-            setActiveStep(3)
+          }else if(route.Stop3 && route.Stop3.ActualTime) {
+            setActiveStep(4)
           }
         // console.log(users);
       })
@@ -131,7 +131,7 @@ export default function Driver() {
 
   return (
     <Box sx={{ maxWidth: 400 }}>
-      <Stepper activeStep={activeStep} orientation="vertical">
+      {userRoute && userRoute.Stop1 && userRoute.Stop1 ?<Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((step, index) => (
           <Step key={step.label}>
             <StepLabel
@@ -145,6 +145,9 @@ export default function Driver() {
             </StepLabel>
             <StepContent>
               {userRoute[stops[activeStep]] && !userRoute[stops[activeStep]].EstimatedTime ? <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <Box m={3} textAlign="left">
+                  {userRoute[stops[activeStep]] && userRoute[stops[activeStep]].Name && <Typography component="h1">Location Name: {userRoute[stops[activeStep]].Name}</Typography>}
+                </Box>
                 <TimePicker
                   ampm={false}
                   openTo="hours"
@@ -197,13 +200,10 @@ export default function Driver() {
             </StepContent>
           </Step>
         ))}
-      </Stepper>
+      </Stepper>: <Typography>No Route Assigned to you</Typography>}
       {activeStep === steps.length && (
         <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-            Reset
-          </Button>
+          <Typography>All Stops completed</Typography>
         </Paper>
       )}
     </Box>

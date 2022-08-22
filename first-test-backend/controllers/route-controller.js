@@ -19,7 +19,7 @@ Route.route('/createRoute').post((req, res, next) => {
 
 // Get All Routes
 Route.route('/getAllRoutes').get((req, res) => {
-    route.find((error, data) => {
+    route.find({"Stop3.ActualTime": {$exists: false}},(error, data) => {
     if (error) {
       return next(error)
     } else {
@@ -71,7 +71,8 @@ Route.route('/deleteRoute/:id').delete((req, res, next) => {
 // get user route
 Route.route('/getUserRoute').get((req, res, next) => {
   console.log(req.user, "req.user")
-  route.findOne({"Driver.ID" : req.user._id}, (error, data) => {
+
+  route.findOne({"Driver.ID" : req.user._id, "Stop3.ActualTime": {$exists: false}}, (error, data) => {
   if (error) {
     return next(error);
   } else {
@@ -84,8 +85,8 @@ Route.route('/getUserRoute').get((req, res, next) => {
 })
 
 Route.route('/updateUserRoute/:id').put((req, res, next) => {
-  console.log(req.user, "req.user")
-  route.findOneAndUpdate(mongoose.Types.ObjectId(req.params.id), req.body, (error, data) => {
+  console.log(req.user, "req.user", req.params.id, req.body)
+  route.findOneAndUpdate({_id: mongoose.Types.ObjectId(req.params.id)}, req.body, (error, data) => {
   if (error) {
     return next(error);
   } else {

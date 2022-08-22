@@ -6,11 +6,11 @@ import { Alert, AlertTitle } from '@mui/lab';
 
 
 let tableColumns = [
-  { title: 'Bus Name', field: 'BusName', lookup: {}, render: rowData => rowData.Bus && rowData.Bus.Name },
-  { title: 'Driver Name', field: 'Name', lookup: {},  render: rowData => rowData.Driver && rowData.Driver.Name },
-  { title: 'Stop 1', field: 'Stop1', lookup: {}, render: rowData => rowData.Stop1 && rowData.Stop1.Name },
-  { title: 'Stop 2', field: 'Stop2', lookup: {}, render: rowData => rowData.Stop2 && rowData.Stop2.Name },
-  { title: 'Stop 3', field: 'Stop3', lookup: {}, render: rowData => rowData.Stop3 && rowData.Stop3.Name },
+  { title: 'Bus Name', field: 'BusName', lookup: {}, render: rowData => rowData.Bus.Name },
+  { title: 'Driver Name', field: 'Name', lookup: {},  render: rowData => rowData.Driver.Name },
+  { title: 'Stop 1', field: 'Stop1', lookup: {}, render: rowData => rowData.Stop1.Name },
+  { title: 'Stop 2', field: 'Stop2', lookup: {}, render: rowData => rowData.Stop2.Name },
+  { title: 'Stop 3', field: 'Stop3', lookup: {}, render: rowData => rowData.Stop3.Name },
 ]
 
 const BusRoute = () => {
@@ -66,6 +66,7 @@ const BusRoute = () => {
   const handleRowUpdate = (newData, oldData, resolve) => {
     //validating the data inputs
     let errorList = [];
+    debugger
     if (newData.BusName === "") {
       errorList.push("Oops!!! You didn't enter the Bus Name field")
     }

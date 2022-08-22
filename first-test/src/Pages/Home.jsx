@@ -1,8 +1,9 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
@@ -18,6 +19,7 @@ import {
   Route,
   Link,
   NavLink,
+  useNavigate
 } from "react-router-dom";
 import Location from './Locations';
 import Buses from './Buses';
@@ -29,6 +31,22 @@ const drawerWidth = 240;
 
 function Home(props) {
 
+  const [items, setItems] = useState({});
+
+  useEffect(() => {
+    const userRole = JSON.parse(localStorage.getItem('user'));
+    if (userRole) {
+     setItems(userRole);
+     console.log('-------->',userRole.Role)
+    }
+  }, []);
+
+  const navigatelogin = () => {
+  localStorage.clear()
+  props.loginHandler(false)
+  
+};
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -37,9 +55,10 @@ function Home(props) {
         sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
       >
         <Toolbar>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Bus Tracking
           </Typography>
+          <Button color="inherit" onClick={navigatelogin} >Logout</Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -56,6 +75,7 @@ function Home(props) {
       >
         <Toolbar />
         <Divider />
+        {items.Role == 'Admin'? 
         <List>
             <NavLink to={"locations"} style={{
                 textDecoration : 'none' , 
@@ -110,7 +130,10 @@ function Home(props) {
               </ListItem>
             </NavLink>
 
-            
+
+        </List>
+          :    
+        <List>
             <NavLink to={"drivers"} style={{
                 textDecoration : 'none' , 
                 color : 'black' , 
@@ -126,20 +149,9 @@ function Home(props) {
             </NavLink>
 
 
-        </List>
-        {/* <Divider /> */}
-        {/* <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
+        </List>      
+        }
+
       </Drawer>
       <Box
         component="main"
@@ -147,12 +159,20 @@ function Home(props) {
       >
         <Toolbar />
         <Routes>
-          <Route path="/locations" element={<Location />} />
+        {items.Role == 'Admin'?
+        <>
+         <Route path="/locations" element={<Location />} />
           <Route path="/buses" element={<Buses />} />
           <Route path="/users" element={<Users />} />
           <Route path="/routes" element={<BusRoute />} />
-          <Route path="/drivers" element={<Driver />} />
           <Route path="*" element={<BusRoute />} />
+        </> 
+          :
+          <>
+            <Route path="/drivers" element={<Driver />} />
+            <Route path="*" element={<Driver />} />
+          </>
+      }
         </Routes>
       </Box>
     </Box>

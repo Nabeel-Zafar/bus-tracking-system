@@ -1,5 +1,6 @@
 
 let Users = require('../models/users-model');
+let Routes = require('../models/route-model');
 const jwt = require('jsonwebtoken');
 
 exports.login=(req, res)=>{
@@ -17,5 +18,18 @@ exports.login=(req, res)=>{
         });
           
       }
+  })
+}
+
+exports.publicRoutes = (req, res) => {
+  Routes.find({"Stop3.ActualTime": {$exists: false}}, (error, data) => {
+    if (error) {
+      return next(error);
+    } else {
+      res.status(200).json({
+        status: true,
+        data
+      })
+    }
   })
 }

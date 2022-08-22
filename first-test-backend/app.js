@@ -11,7 +11,7 @@ let express = require('express'),
 mongoose.Promise = global.Promise;
 const auth = require("./services/auth").authMiddleware;
 
-mongoose.connect('mongodb://0.0.0.0:27017/bustracking', { useNewUrlParser: true }).then(() => {
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }).then(() => {
    console.log('Database sucessfully connected')
 },
 error => {
@@ -44,10 +44,6 @@ const server = app.listen(port, () => {
   console.log('Connected to port ' + port)
 })
 
-// Find 404 and hand over to error handler
-app.use((req, res, next) => {
-   next(createError(404));
-});
 
 // error handler
 app.use(function (err, req, res, next) {
