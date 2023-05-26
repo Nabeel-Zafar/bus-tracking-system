@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: backend-container
-          image: nabeel100/bus-node-image:latest
+          image: nabeel100/bus-nodejs-image2:latest
           ports:
             - containerPort: 3000

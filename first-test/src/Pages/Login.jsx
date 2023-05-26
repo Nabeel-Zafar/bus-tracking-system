@@ -36,7 +36,7 @@ export default function SignIn({loginHandler}) {
     //   email: data.get('email'),
     //   password: data.get('password'),
     // });
-    axios.post("/api/auth",{
+    axios.post(`/api/auth`,{
       username: data.get('email'),
       password: data.get('password'),
     })
